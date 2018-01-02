@@ -2,7 +2,7 @@
 
 Separated Keyword List View written in Kotlin
 
-<img src="https://github.com/WindSekirun/DesignRatingBar/blob/master/sample.png" width="202" height="360">
+<img src="https://github.com/WindSekirun/PredicateLayout/blob/master/sample.png" width="202" height="360">
 
 
 ### Usages
