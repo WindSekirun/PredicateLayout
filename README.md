@@ -26,13 +26,17 @@ dependencies {
 
 #### XML
 ```XML
-String[] keywordSplits = new String[]{"#Keyword1", "#Keyword2", "#Keyword3", "#Keyword4",
-                "#Keyword1", "#Keyword2", "#Keyword3", "#Keyword4",
-                "#Keyword1", "#Keyword2", "#Keyword3", "#Keyword4"};
-
-PredicateLayout layout = findViewById(R.id.predicateLayout);
-layout.addItem(keywordSplits);
-layout.notifyDataSetChanged();
+<pyxis.uzuki.live.predicatelayout.PredicateLayout
+        android:id="@+id/predicateLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        app:backgroundResources="@drawable/bg_hash"
+        app:gravity="center"
+        app:horizontalSpacing="4dp"
+        app:textColor="@android:color/white"
+        app:textSize="14sp"
+        app:verticalSpacing="4dp" />
 ```
 
 #### Java
