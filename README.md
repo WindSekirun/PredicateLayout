@@ -18,7 +18,7 @@ allprojects {
 *app/build.gradle*
 ```
 dependencies {
-
+ implementation 'com.github.WindSekirun:PredicateLayout:0.5.0'
 }
 ```
 
