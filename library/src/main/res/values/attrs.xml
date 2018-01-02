@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="PredicateLayout">
+        <attr name="horizontalSpacing" format="dimension" />
+        <attr name="verticalSpacing" format="dimension" />
+        <attr name="textSize" format="dimension" />
+        <attr name="backgroundResources" format="integer" />
+        <attr name="gravity" format="enum">
+            <enum name="left" value="1" />
+            <enum name="center" value="0" />
+            <enum name="right" value="2" />
+        </attr>
+        <attr name="textColor" format="reference" />
+    </declare-styleable>
+
+    <dimen name="predicate_default_spacing">4dp</dimen>
+    <dimen name="predicate_default_size">14sp</dimen>
+    <color name="predicate_default_color">@android:color/white</color>
+
+</resources>
