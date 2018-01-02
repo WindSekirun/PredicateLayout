@@ -2,6 +2,7 @@ package pyxis.uzuki.live.predicatelayout
 
 import android.content.Context
 import android.graphics.drawable.Drawable
+import android.os.Build
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.View
@@ -174,13 +175,16 @@ class PredicateLayout constructor(context: Context, attrs: AttributeSet? = null)
 
     private fun getItemTextView(text: String): TextView {
         val params = ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        val textView = textTransformer.generateNewText(text, mBackgroundDrawable, mTextSize, getGravityValue(), mTextColor)
+        val gravity = getGravityValue()
+        val textView = textTransformer.generateNewText(text, mBackgroundDrawable, mTextSize, gravity, getColor())
         textView.text = String.format(" %s ", text)
         textView.tag = text
         textView.setOnClickListener(this)
         textView.layoutParams = params
         return textView
     }
+
+    private fun getColor() = if (Build.VERSION.SDK_INT >= 23) context.resources.getColor(mTextColor, null) else context.resources.getColor(mTextColor)
 
     private fun getGravityValue(): Int {
         return when (mGravity) {
