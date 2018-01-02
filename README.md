@@ -1,6 +1,10 @@
 ## PredicateLayout 
 
- 
+Separated Keyword List View written in Kotlin
+
+<img src="https://github.com/WindSekirun/DesignRatingBar/blob/master/sample.png" width="202" height="360">
+
+
 ### Usages
 *rootProject/build.gradle*
 ```	
@@ -18,7 +22,29 @@ dependencies {
 }
 ```
 
-### Usages=
+### Usages
+
+#### XML
+```XML
+String[] keywordSplits = new String[]{"#Keyword1", "#Keyword2", "#Keyword3", "#Keyword4",
+                "#Keyword1", "#Keyword2", "#Keyword3", "#Keyword4",
+                "#Keyword1", "#Keyword2", "#Keyword3", "#Keyword4"};
+
+PredicateLayout layout = findViewById(R.id.predicateLayout);
+layout.addItem(keywordSplits);
+layout.notifyDataSetChanged();
+```
+
+#### Java
+```Java
+String[] keywordSplits = new String[]{"#Keyword1", "#Keyword2", "#Keyword3", "#Keyword4",
+                "#Keyword1", "#Keyword2", "#Keyword3", "#Keyword4",
+                "#Keyword1", "#Keyword2", "#Keyword3", "#Keyword4"};
+
+PredicateLayout layout = findViewById(R.id.predicateLayout);
+layout.addItem(keywordSplits);
+layout.notifyDataSetChanged();
+```
 
 ### License 
 ```

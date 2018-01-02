@@ -12,9 +12,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        String[] keywordSplits = new String[]{"#키워드1", "#키워드2", "#키워드3", "#키워드4",
-                "#키워드1", "#키워드2", "#키워드3", "#키워드4",
-                "#키워드1", "#키워드2", "#키워드3", "#키워드4"};
+        String[] keywordSplits = new String[]{"#Keyword1", "#Keyword2", "#Keyword3", "#Keyword4",
+                "#Keyword1", "#Keyword2", "#Keyword3", "#Keyword4",
+                "#Keyword1", "#Keyword2", "#Keyword3", "#Keyword4"};
 
         PredicateLayout layout = findViewById(R.id.predicateLayout);
         layout.addItem(keywordSplits);
