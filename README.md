@@ -1,4 +1,6 @@
-## PredicateLayout 
+## PredicateLayout [![](https://jitpack.io/v/WindSekirun/PredicateLayout.svg)](https://jitpack.io/#WindSekirun/PredicateLayout)
+
+[![Kotlin](https://img.shields.io/badge/kotlin-1.2.0-blue.svg)](http://kotlinlang.org)	[![GitHub license](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0)
 
 Separated Keyword List View written in Kotlin
 
@@ -18,7 +20,7 @@ allprojects {
 *app/build.gradle*
 ```
 dependencies {
- implementation 'com.github.WindSekirun:PredicateLayout:0.5.0'
+     implementation 'com.github.WindSekirun:PredicateLayout:0.5.0'
 }
 ```
 
