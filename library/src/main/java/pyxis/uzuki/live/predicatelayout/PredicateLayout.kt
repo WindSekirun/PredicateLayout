@@ -41,6 +41,15 @@ class PredicateLayout constructor(context: Context, attrs: AttributeSet? = null)
     }
 
     /**
+     * set items into PredicateLayout
+     *
+     * @param items list of item
+     */
+    fun setItems(items: List<String>) {
+        this.items.addAll(items)
+    }
+
+    /**
      * remove item in PredicateLayout
      *
      * @param item String
