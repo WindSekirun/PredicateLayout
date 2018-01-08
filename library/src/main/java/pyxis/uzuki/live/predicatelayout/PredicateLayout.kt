@@ -1,52 +1,55 @@
 package pyxis.uzuki.live.predicatelayout
 
 import android.content.Context
+import android.graphics.Color
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.ShapeDrawable
+import android.graphics.drawable.shapes.RectShape
 import android.os.Build
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.google.android.flexbox.*
 import pyxis.uzuki.live.predicatelayout.impl.OnItemClickListener
 import pyxis.uzuki.live.predicatelayout.impl.PredicateTextTransformer
 import pyxis.uzuki.live.predicatelayout.preset.PredefindTextTransformer
 import java.util.*
 
 
-class PredicateLayout constructor(context: Context, attrs: AttributeSet? = null) : ViewGroup(context, attrs), View.OnClickListener {
-    private var mLineHeight: Int = 0
-    private val items = ArrayList<String>()
+class PredicateLayout constructor(context: Context, attrs: AttributeSet? = null) : FlexboxLayout(context, attrs), View.OnClickListener {
+    private val mItems = ArrayList<String>()
     private var mHorizontalSpacing = 1
     private var mVerticalSpacing = 1
     private var mTextSize = 0
     private var mTextColor = android.R.color.white
     private var mBackgroundDrawable: Drawable? = null
-    private val selectedList = ArrayList<String>()
+    private val mSelectedList = ArrayList<String>()
     private var mGravity = 0
-    private var clickListener: OnItemClickListener? = null
-    private var textTransformer: PredicateTextTransformer = PredefindTextTransformer(context)
+    private var mClickListener: OnItemClickListener? = null
+    private var mTextTransformer: PredicateTextTransformer = PredefindTextTransformer(context)
 
     init {
         init(attrs)
     }
 
     /**
-     * add items into PredicateLayout
+     * add mItems into PredicateLayout
      *
      * @param items String...
      */
     fun addItem(vararg items: String) {
-        this.items.addAll(Arrays.asList(*items))
+        this.mItems.addAll(Arrays.asList(*items))
     }
 
     /**
-     * set items into PredicateLayout
+     * set mItems into PredicateLayout
      *
      * @param items list of item
      */
     fun setItems(items: List<String>) {
-        this.items.addAll(items)
+        this.mItems.addAll(items)
     }
 
     /**
@@ -55,22 +58,22 @@ class PredicateLayout constructor(context: Context, attrs: AttributeSet? = null)
      * @param item String
      */
     fun remove(item: String) {
-        this.items.remove(item)
+        this.mItems.remove(item)
     }
 
     /**
      * Clear all layout
      */
     fun clear() {
-        this.items.clear()
+        this.mItems.clear()
     }
 
     /**
      * notify when dataset is changed
      */
     fun notifyDataSetChanged() {
-        removeAllViews()
-        for (item in items) {
+        removeAllViewsInLayout()
+        for (item in mItems) {
             addView(getItemTextView(item))
         }
     }
@@ -79,13 +82,13 @@ class PredicateLayout constructor(context: Context, attrs: AttributeSet? = null)
      * callback when click item
      */
     fun setOnItemClickListener(listener: OnItemClickListener) {
-        this.clickListener = listener
+        this.mClickListener = listener
     }
 
     /**
      * get selected list
      */
-    fun getSelectedList() = selectedList
+    fun getSelectedList() = mSelectedList
 
     /**
      * set [PredicateTextTransformer] object
@@ -94,7 +97,7 @@ class PredicateLayout constructor(context: Context, attrs: AttributeSet? = null)
      * see [PredefindTextTransformer] for example.
      */
     fun setTextTransformer(transformer: PredicateTextTransformer) {
-        this.textTransformer = transformer
+        this.mTextTransformer = transformer
     }
 
     private fun getDimensionSize(resId: Int) = context.resources.getDimensionPixelSize(resId)
@@ -113,79 +116,28 @@ class PredicateLayout constructor(context: Context, attrs: AttributeSet? = null)
             mGravity = array.getInt(R.styleable.PredicateLayout_gravity, 0)
             array.recycle()
         }
+
+        setShowDivider(FlexboxLayout.SHOW_DIVIDER_MIDDLE)
+        dividerDrawableVertical = getDividerShape(mVerticalSpacing)
+        dividerDrawableHorizontal = getDividerShape(mHorizontalSpacing)
+        alignContent = AlignContent.FLEX_START
+        flexDirection = FlexDirection.ROW
+        alignItems = AlignItems.FLEX_START
+        flexWrap = FlexWrap.WRAP
     }
 
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val width = View.MeasureSpec.getSize(widthMeasureSpec) - paddingLeft - paddingRight
-        var height = View.MeasureSpec.getSize(heightMeasureSpec) - paddingTop - paddingBottom
-        val count = childCount
-        var lineHeight = 0
-
-        var xPos = paddingLeft
-        var yPos = paddingTop
-
-        for (i in 0 until count) {
-            val child = getChildAt(i)
-            if (child.visibility != View.GONE) {
-                child.measure(View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.AT_MOST), View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.UNSPECIFIED))
-
-                val childW = child.measuredWidth
-                lineHeight = Math.max(lineHeight, child.measuredHeight + mVerticalSpacing)
-                if (xPos + childW > width) {
-                    xPos = paddingLeft
-                    yPos += lineHeight
-                }
-
-                xPos += childW + mHorizontalSpacing
-            }
-        }
-
-        this.mLineHeight = lineHeight
-
-        if (View.MeasureSpec.getMode(heightMeasureSpec) == View.MeasureSpec.UNSPECIFIED) {
-            height = yPos + lineHeight
-        } else if (View.MeasureSpec.getMode(heightMeasureSpec) == View.MeasureSpec.AT_MOST && yPos + lineHeight < height) {
-            height = yPos + lineHeight
-        }
-
-        setMeasuredDimension(width, height)
-    }
-
-    override fun generateDefaultLayoutParams(): ViewGroup.LayoutParams {
-        return ViewGroup.LayoutParams(1, 1)
-    }
-
-    override fun checkLayoutParams(p: ViewGroup.LayoutParams?): Boolean {
-        return p != null
-    }
-
-    override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
-        val count = childCount
-        val width = r - l
-        var xPos = paddingLeft
-        var yPos = paddingTop
-
-        for (i in 0 until count) {
-            val child = getChildAt(i)
-            if (child.visibility != View.GONE) {
-                val childW = child.measuredWidth
-                val childH = child.measuredHeight
-
-                if (xPos + childW > width) {
-                    xPos = paddingLeft
-                    yPos += mLineHeight
-                }
-
-                child.layout(xPos, yPos, xPos + childW, yPos + childH)
-                xPos += childW + mHorizontalSpacing
-            }
+    private fun getDividerShape(px: Int): ShapeDrawable {
+        return ShapeDrawable(RectShape()).apply {
+            intrinsicWidth = px
+            intrinsicHeight = px
+            paint.color = Color.TRANSPARENT
         }
     }
 
     private fun getItemTextView(text: String): TextView {
         val params = ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         val gravity = getGravityValue()
-        val textView = textTransformer.generateNewText(text, mBackgroundDrawable, mTextSize, gravity, getColor())
+        val textView = mTextTransformer.generateNewText(text, mBackgroundDrawable, mTextSize, gravity, getColor())
         textView.text = String.format(" %s ", text)
         textView.tag = text
         textView.setOnClickListener(this)
@@ -207,14 +159,14 @@ class PredicateLayout constructor(context: Context, attrs: AttributeSet? = null)
     override fun onClick(v: View?) {
         val text = v?.tag.toString()
 
-        if (clickListener != null) {
-            clickListener?.onClick(text)
+        if (mClickListener != null) {
+            mClickListener?.onClick(text)
         }
 
-        if (selectedList.contains(text)) {
-            selectedList.remove(text)
+        if (mSelectedList.contains(text)) {
+            mSelectedList.remove(text)
         } else {
-            selectedList.add(text)
+            mSelectedList.add(text)
         }
     }
 }

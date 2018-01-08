@@ -2,9 +2,7 @@
 
 [![Kotlin](https://img.shields.io/badge/kotlin-1.2.0-blue.svg)](http://kotlinlang.org)	[![GitHub license](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0)
 
-Separated Keyword List View written in Kotlin
-
-<img src="https://github.com/WindSekirun/PredicateLayout/blob/master/sample.png" width="202" height="360">
+Separated Keyword View with [Flexbox-layout](https://github.com/google/flexbox-layout) written in Kotlin
 
 
 ### Usages
@@ -43,13 +41,7 @@ dependencies {
 
 #### Java
 ```Java
-String[] keywordSplits = new String[]{"#Keyword1", "#Keyword2", "#Keyword3", "#Keyword4",
-                "#Keyword1", "#Keyword2", "#Keyword3", "#Keyword4",
-                "#Keyword1", "#Keyword2", "#Keyword3", "#Keyword4"};
 
-PredicateLayout layout = findViewById(R.id.predicateLayout);
-layout.addItem(keywordSplits);
-layout.notifyDataSetChanged();
 ```
 
 ### License 
