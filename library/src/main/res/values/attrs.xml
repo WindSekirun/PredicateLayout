@@ -5,7 +5,7 @@
         <attr name="horizontalSpacing" format="dimension" />
         <attr name="verticalSpacing" format="dimension" />
         <attr name="textSize" format="dimension" />
-        <attr name="backgroundResources" format="integer" />
+        <attr name="backgroundResources" format="reference" />
         <attr name="gravity" format="enum">
             <enum name="left" value="1" />
             <enum name="center" value="0" />

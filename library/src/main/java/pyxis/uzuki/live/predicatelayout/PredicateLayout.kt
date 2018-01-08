@@ -6,12 +6,15 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.RectShape
 import android.os.Build
+import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import com.google.android.flexbox.*
+import kotlinx.android.synthetic.main.predicate_layout.view.*
 import pyxis.uzuki.live.predicatelayout.impl.OnItemClickListener
 import pyxis.uzuki.live.predicatelayout.impl.PredicateTextTransformer
 import pyxis.uzuki.live.predicatelayout.preset.PredefindTextTransformer
@@ -24,7 +27,7 @@ class PredicateLayout constructor(context: Context, attrs: AttributeSet? = null)
     private var mVerticalSpacing = 1
     private var mTextSize = 0
     private var mTextColor = android.R.color.white
-    private var mBackgroundDrawable: Drawable? = null
+    private var mBackgroundDrawableRes: Int? = null
     private val mSelectedList = ArrayList<String>()
     private var mGravity = 0
     private var mClickListener: OnItemClickListener? = null
@@ -103,6 +106,8 @@ class PredicateLayout constructor(context: Context, attrs: AttributeSet? = null)
     private fun getDimensionSize(resId: Int) = context.resources.getDimensionPixelSize(resId)
 
     private fun init(attrs: AttributeSet?) {
+        inflate(context, R.layout.predicate_layout, this)
+
         if (attrs != null) {
             val array = context.obtainStyledAttributes(attrs, R.styleable.PredicateLayout)
             mHorizontalSpacing = array.getDimensionPixelSize(R.styleable.PredicateLayout_horizontalSpacing,
@@ -111,19 +116,19 @@ class PredicateLayout constructor(context: Context, attrs: AttributeSet? = null)
                     getDimensionSize(R.dimen.predicate_default_spacing))
             mTextSize = array.getDimensionPixelSize(R.styleable.PredicateLayout_textSize,
                     getDimensionSize(R.dimen.predicate_default_size))
-            mBackgroundDrawable = array.getDrawable(R.styleable.PredicateLayout_backgroundResources)
+            mBackgroundDrawableRes = array.getResourceId(R.styleable.PredicateLayout_backgroundResources, R.drawable.transparent)
             mTextColor = array.getResourceId(R.styleable.PredicateLayout_textColor, android.R.color.white)
             mGravity = array.getInt(R.styleable.PredicateLayout_gravity, 0)
             array.recycle()
         }
 
-        setShowDivider(FlexboxLayout.SHOW_DIVIDER_MIDDLE)
-        dividerDrawableVertical = getDividerShape(mVerticalSpacing)
-        dividerDrawableHorizontal = getDividerShape(mHorizontalSpacing)
-        alignContent = AlignContent.FLEX_START
+        flexWrap = FlexWrap.WRAP
         flexDirection = FlexDirection.ROW
         alignItems = AlignItems.FLEX_START
-        flexWrap = FlexWrap.WRAP
+        alignContent = AlignContent.FLEX_START
+        setShowDivider(FlexboxLayout.SHOW_DIVIDER_MIDDLE)
+        dividerDrawableVertical = getDividerShape(mHorizontalSpacing)
+        dividerDrawableHorizontal = getDividerShape(mVerticalSpacing)
     }
 
     private fun getDividerShape(px: Int): ShapeDrawable {
@@ -135,17 +140,15 @@ class PredicateLayout constructor(context: Context, attrs: AttributeSet? = null)
     }
 
     private fun getItemTextView(text: String): TextView {
-        val params = ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         val gravity = getGravityValue()
-        val textView = mTextTransformer.generateNewText(text, mBackgroundDrawable, mTextSize, gravity, getColor())
+        val textView = mTextTransformer.generateNewText(context, text, mBackgroundDrawableRes, mTextSize, gravity, getColor())
         textView.text = String.format(" %s ", text)
         textView.tag = text
         textView.setOnClickListener(this)
-        textView.layoutParams = params
         return textView
     }
 
-    private fun getColor() = if (Build.VERSION.SDK_INT >= 23) context.resources.getColor(mTextColor, null) else context.resources.getColor(mTextColor)
+    private fun getColor() = ContextCompat.getColor(context, mTextColor)
 
     private fun getGravityValue(): Int {
         return when (mGravity) {
