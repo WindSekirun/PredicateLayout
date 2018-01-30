@@ -87,6 +87,7 @@ class PredicateLayout constructor(context: Context, attrs: AttributeSet? = null)
      */
     fun usingCustomView(transformer: (String) -> View?) {
         mUsingCustomView = true
+        mTransformer = transformer
     }
 
     /**
