@@ -5,12 +5,15 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.TypedValue;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import kotlin.jvm.functions.Function1;
 import pyxis.uzuki.live.predicatelayout.PredicateLayout;
 import pyxis.uzuki.live.predicatelayout.impl.PredicateTextTransformer;
 import pyxis.uzuki.live.pyxinjector.annotation.BindView;
@@ -35,6 +38,15 @@ public class MainActivity extends InjectActivity {
             return false;
         });
 
+        predicateLayout.usingCustomView(new Function1<String, View>() {
+            @Override
+            public View invoke(String s) {
+                View view = LayoutInflater.from(MainActivity.this).inflate(R.layout.itemn, null);
+                TextView textView = view.findViewById(R.id.txtItem);
+                textView.setText(s);
+                return view;
+            }
+        });
     }
 
     private void addKeyword(String text) {
@@ -53,22 +65,6 @@ public class MainActivity extends InjectActivity {
 
     private void updatePredicateLayout() {
         predicateLayout.clear();
-        predicateLayout.setTextTransformer((context, text, backgroundRes, size, gravity, color) -> {
-            int dip9 = RichUtils.dip2px(context, 9);
-            int dip6 = RichUtils.dip2px(context, 6);
-
-            TextView textView = new TextView(MainActivity.this);
-            textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
-            textView.setText(String.format(" %s ", text));
-            textView.setGravity(gravity);
-            textView.setPadding(dip9, dip6, dip9, dip6);
-            textView.setTextColor(color);
-
-            if (backgroundRes != null) {
-                textView.setBackground(ContextCompat.getDrawable(context, backgroundRes));
-            }
-            return textView;
-        });
         predicateLayout.setItems(itemList);
         predicateLayout.notifyDataSetChanged();
     }
