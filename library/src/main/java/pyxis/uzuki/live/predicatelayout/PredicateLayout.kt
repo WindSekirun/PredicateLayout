@@ -2,19 +2,14 @@ package pyxis.uzuki.live.predicatelayout
 
 import android.content.Context
 import android.graphics.Color
-import android.graphics.drawable.Drawable
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.RectShape
-import android.os.Build
 import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.View
-import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.TextView
 import com.google.android.flexbox.*
-import kotlinx.android.synthetic.main.predicate_layout.view.*
 import pyxis.uzuki.live.predicatelayout.impl.OnItemClickListener
 import pyxis.uzuki.live.predicatelayout.impl.PredicateTextTransformer
 import pyxis.uzuki.live.predicatelayout.preset.PredefindTextTransformer
@@ -32,6 +27,8 @@ class PredicateLayout constructor(context: Context, attrs: AttributeSet? = null)
     private var mGravity = 0
     private var mClickListener: OnItemClickListener? = null
     private var mTextTransformer: PredicateTextTransformer = PredefindTextTransformer(context)
+    private var mUsingCustomView = false
+    private var mTransformer: ((String) -> View?)? = null
 
     init {
         init(attrs)
@@ -77,8 +74,19 @@ class PredicateLayout constructor(context: Context, attrs: AttributeSet? = null)
     fun notifyDataSetChanged() {
         removeAllViewsInLayout()
         for (item in mItems) {
-            addView(getItemTextView(item))
+            if (mUsingCustomView) {
+                addView(getItemView(item))
+            } else {
+                addView(getItemTextView(item))
+            }
         }
+    }
+
+    /**
+     * set flag when using customview
+     */
+    fun usingCustomView(transformer: (String) -> View?) {
+        mUsingCustomView = true
     }
 
     /**
@@ -146,6 +154,14 @@ class PredicateLayout constructor(context: Context, attrs: AttributeSet? = null)
         textView.tag = text
         textView.setOnClickListener(this)
         return textView
+    }
+
+    private fun getItemView(text: String): View {
+        if (mTransformer == null) {
+            return getItemTextView(text)
+        }
+
+        return (mTransformer as (String) -> View?).invoke(text) ?: return getItemTextView(text)
     }
 
     private fun getColor() = ContextCompat.getColor(context, mTextColor)
